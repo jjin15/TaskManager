@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Recurring Tasks</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+  <h1>Recurring Tasks</h1>
+  <a href="/" class="button">← Back</a>
+</header>
+
+<main>
+
+  <form method="post" class="form-card">
+
+    <label>
+      Title
+      <input type="text" name="title" required>
+    </label>
+
+    <label>
+      Description
+      <textarea name="description"></textarea>
+    </label>
+
+    <label>
+      Prerequisites
+      <textarea name="prerequisites"></textarea>
+    </label>
+
+    <label>
+      Assignee
+      <input type="text" name="assignee">
+    </label>
+
+    <label>
+      Due day of month
+      <input type="number"
+             name="due_day"
+             min="1"
+             max="31"
+             required>
+    </label>
+
+    <label>
+        Frequency
+        <select name="frequency" id="frequency"
+                onchange="toggleRecurringFields()">
+          <option value="weekly">Weekly</option>
+          <option value="monthly" selected>Monthly</option>
+          <option value="annual">Annual</option>
+        </select>
+      </label>
+
+      <label id="weekly-field" style="display:none;">
+        Repeat every (weeks)
+        <input type="number" name="weekly_interval" min="1" value="1">
+      </label>
+
+      <label id="monthly-field">
+        Due day of month
+        <input type="number"
+               name="due_day"
+               min="1"
+               max="31">
+      </label>
+
+      <label id="annual-field" style="display:none;">
+        Due date (month & day)
+        <input type="date" name="annual_date">
+      </label>
+
+    <div class="form-actions">
+      <button class="button primary">Create recurring task</button>
+      <a href="/" class="button">Cancel</a>
+    </div>
+
+  </form>
+
+</main>
+
+</body>
+</html>

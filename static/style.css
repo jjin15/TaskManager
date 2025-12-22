@@ -1,0 +1,168 @@
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #f6f7f9;
+  margin: 0;
+  padding: 20px;
+}
+
+/* ---------- LAYOUT ---------- */
+
+header,
+main {
+  max-width: 900px;
+}
+
+header {
+  margin-bottom: 20px;
+}
+
+/* ---------- NAV / TABS ---------- */
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.tabs a {
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: #eee;
+  color: #333;
+}
+
+.tabs a.active {
+  background: #1976d2;
+  color: white;
+}
+
+/* ---------- BUTTONS ---------- */
+
+.button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  background: #e0e0e0;
+  color: black;
+}
+
+.button.primary {
+  background: #1976d2;
+  color: white;
+}
+
+.button.success {
+  background: #2e7d32;
+  color: white;
+}
+
+.button.danger {
+  background: #c62828;
+  color: white;
+}
+
+/* ---------- TASK CARDS ---------- */
+
+.task-card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 6px solid transparent;
+  margin-bottom: 15px;
+}
+
+.task-card.overdue {
+  border-left-color: #c62828;
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.task-meta {
+  display: flex;
+  gap: 15px;
+  font-size: 0.85em;
+  color: #666;
+  margin-top: 8px;
+}
+
+.task-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 10px;
+}
+
+.task-actions-main {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.task-actions-main form {
+  margin: 0;
+}
+
+.task-actions-danger {
+  display: flex;
+}
+
+
+
+.task-actions form {
+  margin: 0;
+}
+
+.delete-attachment {
+  margin-left: 8px;
+  color: #b00020;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.delete-attachment:hover {
+  text-decoration: underline;
+}
+
+/* ---------- FORMS ---------- */
+
+.form-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-card label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-card input,
+.form-card textarea {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.attachments {
+  margin-top: 10px;
+  font-size: 0.9em;
+}
+
+.attachments ul {
+  padding-left: 18px;
+  margin: 5px 0;
+}

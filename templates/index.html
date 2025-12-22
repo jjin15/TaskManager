@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>House Tasks</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+  <h1>House Tasks</h1>
+
+  <nav class="tabs">
+    <a href="/?status=created"
+       class="{{ 'active' if current_status=='created' else '' }}">
+       Outstanding
+    </a>
+    <a href="/?status=ongoing"
+       class="{{ 'active' if current_status=='ongoing' else '' }}">
+       Ongoing
+    </a>
+    <a href="/?status=completed"
+       class="{{ 'active' if current_status=='completed' else '' }}">
+       Completed
+    </a>
+  </nav>
+
+  <div class="top-actions">
+    <a href="/new" class="button primary">+ New Task</a>
+    <a href="/recurring" class="button">⟳ Recurring</a>
+  </div>
+</header>
+
+<main>
+
+{% for t in tasks %}
+  <div class="task-card
+       {% if t.due_date and t.status != 'completed' and t.due_date < today %}
+         overdue
+       {% endif %}">
+
+    <div class="task-header">
+      <h3>{{ t.title }}</h3>
+      {% if t.assignee %}
+        <span class="assignee">{{ t.assignee }}</span>
+      {% endif %}
+    </div>
+
+    {% if t.description %}
+      <p class="description">{{ t.description }}</p>
+    {% endif %}
+
+    {% if t.prerequisites %}
+      <p class="prereq">
+        <b>Prerequisites:</b> {{ t.prerequisites }}
+      </p>
+    {% endif %}
+
+    <div class="task-meta">
+      <span>Created: {{ t.created_at | pretty_date }}</span>
+
+      {% if t.due_date %}
+        <span>Due: {{ t.due_date }}</span>
+      {% endif %}
+
+      {% if t.completed_at %}
+        <span>Completed: {{ t.completed_at | pretty_date }}</span>
+      {% endif %}
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="task-actions">
+
+      <div class="task-actions-main">
+        {% if t.status == 'created' %}
+          <a href="/start/{{ t.id }}" class="button">Start</a>
+        {% endif %}
+
+        {% if t.status != 'completed' %}
+          <a href="/complete/{{ t.id }}" class="button success">Complete</a>
+        {% endif %}
+
+        <a href="/edit/{{ t.id }}" class="button">Edit</a>
+
+        <form action="/upload/{{ t.id }}"
+              method="post"
+              enctype="multipart/form-data">
+          <label class="button">
+            Add files
+            <input type="file"
+                   name="files"
+                   multiple
+                   onchange="this.form.submit()"
+                   hidden>
+          </label>
+        </form>
+      </div>
+
+      <div class="task-actions-danger">
+        <a href="/delete/{{ t.id }}"
+           class="button danger"
+           onclick="return confirm('Delete this task?')">
+          Delete
+        </a>
+      </div>
+
+    </div>
+
+    <!-- ATTACHMENTS -->
+    {% set attachments =
+         files | selectattr("task_id", "equalto", t.id) | list %}
+
+    {% if attachments %}
+      <div class="attachments">
+        <b>Attachments:</b>
+        <ul>
+          {% for f in attachments %}
+            <li>
+              <a href="/files/{{ t.id }}/{{ f.filename }}" target="_blank">
+                {{ f.filename }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+  </div>
+{% else %}
+  <p class="empty">No tasks in this view.</p>
+{% endfor %}
+
+</main>
+
+</body>
+</html>

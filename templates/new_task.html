@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>New Task</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+  <h1>Create New Task</h1>
+</header>
+
+<main>
+  <form method="post" class="form-card" enctype="multipart/form-data">
+
+    <label>
+      Title
+      <input type="text" name="title" required>
+    </label>
+
+    <label>
+      Description
+      <textarea name="description" rows="3"></textarea>
+    </label>
+
+    <label>
+      Prerequisites
+      <textarea name="prerequisites" rows="2"></textarea>
+    </label>
+
+    <label>
+      Assignee
+      <input type="text" name="assignee">
+    </label>
+
+    <label>
+      Due date
+      <input type="date" name="due_date">
+    </label>
+    <label>
+      Attach files
+      <input type="file" name="files" multiple>
+    </label>
+    <div class="form-actions">
+      <button type="submit" class="button primary">Create Task</button>
+      <a href="/" class="button">Cancel</a>
+    </div>
+
+  </form>
+</main>
+
+</body>
+</html>

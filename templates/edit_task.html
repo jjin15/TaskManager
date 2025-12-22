@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Task</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+  <h1>Edit Task</h1>
+  <a href="/" class="button">← Back</a>
+</header>
+
+<main>
+  <form method="post" class="form-card">
+
+    <label>
+      Title
+      <input type="text" name="title" value="{{ task.title }}" required>
+    </label>
+
+    <label>
+      Description
+      <textarea name="description">{{ task.description }}</textarea>
+    </label>
+
+    <label>
+      Prerequisites
+      <textarea name="prerequisites">{{ task.prerequisites }}</textarea>
+    </label>
+
+    <label>
+      Assignee
+      <input type="text" name="assignee" value="{{ task.assignee }}">
+    </label>
+
+    <label>
+      Due date
+      <input type="date" name="due_date" value="{{ task.due_date }}">
+    </label>
+
+    <div class="form-actions">
+      <button class="button primary">Save changes</button>
+      <a href="/" class="button">Cancel</a>
+    </div>
+
+  </form>
+</main>
+
+</body>
+</html>
