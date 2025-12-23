@@ -124,13 +124,110 @@ def index():
     files = db.execute("""
         SELECT * FROM task_files
     """).fetchall()
+
+    counts = {
+        "created": db.execute(
+            "SELECT COUNT(*) FROM tasks WHERE status = 'created'"
+        ).fetchone()[0],
+        "ongoing": db.execute(
+            "SELECT COUNT(*) FROM tasks WHERE status = 'ongoing'"
+        ).fetchone()[0],
+        "completed": db.execute(
+            "SELECT COUNT(*) FROM tasks WHERE status = 'completed'"
+        ).fetchone()[0],
+    }
     db.close()
     return render_template(
         "index.html",
         tasks=tasks,
         files=files,
         current_status=status,
-        today=date.today().isoformat()
+        today=date.today().isoformat(),
+        counts=counts
+    )
+
+@app.route("/assignees")
+def list_assignees():
+    db = get_db()
+    rows = db.execute(
+        "SELECT name FROM assignees ORDER BY name"
+    ).fetchall()
+    return [r["name"] for r in rows]
+
+@app.route("/assignees/manage")
+def manage_assignees():
+    db = get_db()
+    assignees = db.execute(
+        "SELECT name FROM assignees ORDER BY name"
+    ).fetchall()
+    return render_template(
+        "assignees.html",
+        assignees=assignees
+    )
+
+@app.route("/assignees/add", methods=["POST"])
+def add_assignee():
+    name = request.form["name"].strip()
+    db = get_db()
+    if name:
+        db.execute(
+            "INSERT OR IGNORE INTO assignees (name) VALUES (?)",
+            (name,)
+        )
+        db.commit()
+    return redirect("/assignees/manage")
+
+@app.route("/assignees/delete/<name>")
+def delete_assignee(name):
+    db = get_db()
+    if name == "Unassigned":
+        return redirect("/assignees/manage")
+
+    db.execute(
+        "UPDATE tasks SET assignee='Unassigned' WHERE assignee=?",
+        (name,)
+    )
+    db.execute(
+        "DELETE FROM assignees WHERE name=?",
+        (name,)
+    )
+    db.commit()
+
+    return redirect("/assignees/manage")
+
+@app.route("/by-assignee")
+def by_assignee():
+    status = request.args.get("status", "created")
+    assignee = request.args.get("assignee", "All")
+
+    db = get_db()
+
+    query = """
+        SELECT * FROM tasks
+        WHERE status = ?
+    """
+    params = [status]
+
+    if assignee != "All":
+        query += " AND assignee = ?"
+        params.append(assignee)
+
+    tasks = db.execute(query, params).fetchall()
+
+    assignees = [
+        r[0] for r in db.execute(
+            "SELECT name FROM assignees ORDER BY name"
+        ).fetchall()
+    ]
+
+    db.close()
+
+    return render_template(
+        "by_assignee.html",
+        tasks=tasks,
+        assignees=assignees,
+        current_status=status,
+        current_assignee=assignee
     )
 
 @app.route("/new", methods=["GET", "POST"])
@@ -159,7 +256,6 @@ def new_task():
         for f in files:
             if not f or f.filename == "":
                 continue
-
             if not allowed_file(f.filename):
                 continue
 
@@ -175,7 +271,19 @@ def new_task():
         db.close()
         return redirect(url_for("index"))
 
-    return render_template("new_task.html")
+    # 👇 THIS IS THE IMPORTANT PART
+    db = get_db()
+    assignees = [
+        r["name"] for r in db.execute(
+            "SELECT name FROM assignees ORDER BY name"
+        ).fetchall()
+    ]
+    db.close()
+
+    return render_template(
+        "new_task.html",
+        assignees=assignees
+    )
 
 @app.route("/upload/<int:task_id>", methods=["POST"])
 def upload_files(task_id):

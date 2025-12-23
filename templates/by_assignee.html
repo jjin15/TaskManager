@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tasks by Assignee</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+  <h1>Tasks by Assignee</h1>
+
+  <!-- Status pills -->
+  <nav class="tabs">
+    {% for s, label in [
+      ('created','Outstanding'),
+      ('ongoing','Ongoing'),
+      ('completed','Completed')
+    ] %}
+      <a href="/by-assignee?status={{ s }}&assignee={{ current_assignee }}"
+         class="{{ 'active' if current_status == s else '' }}">
+        {{ label }}
+      </a>
+    {% endfor %}
+  </nav>
+
+  <!-- Assignee pills -->
+  <nav class="tabs secondary">
+    <a href="/by-assignee?status={{ current_status }}&assignee=All"
+       class="{{ 'active' if current_assignee == 'All' else '' }}">
+      All
+    </a>
+
+    {% for a in assignees %}
+      <a href="/by-assignee?status={{ current_status }}&assignee={{ a }}"
+         class="{{ 'active' if current_assignee == a else '' }}">
+        {{ a }}
+      </a>
+    {% endfor %}
+  </nav>
+
+  <div class="top-actions">
+    <a href="/" class="button">← Back to Tasks</a>
+  </div>
+</header>
+
+<main>
+
+{% for t in tasks %}
+  <div class="task-card {{ t['status'] }}">
+
+    <div class="task-header">
+      <h3>{{ t['title'] }}</h3>
+
+      <span class="pill {{ t['status'] }}">
+        {{ t['status'].capitalize() }}
+      </span>
+    </div>
+
+    {% if t['description'] %}
+      <p class="task-desc">{{ t['description'] }}</p>
+    {% endif %}
+
+    <div class="task-meta">
+      <span>Assignee: {{ t['assignee'] }}</span>
+
+      {% if t['due_date'] %}
+        <span>Due: {{ t['due_date'] }}</span>
+      {% endif %}
+    </div>
+
+    <div class="task-actions">
+      <a href="/edit/{{ t['id'] }}" class="button small">Edit</a>
+    </div>
+
+  </div>
+{% else %}
+  <p class="empty">No tasks in this view.</p>
+{% endfor %}
+
+</main>
+
+</body>
+</html>

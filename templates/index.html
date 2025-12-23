@@ -10,22 +10,28 @@
   <h1>House Tasks</h1>
 
   <nav class="tabs">
-    <a href="/?status=created"
-       class="{{ 'active' if current_status=='created' else '' }}">
-       Outstanding
-    </a>
-    <a href="/?status=ongoing"
-       class="{{ 'active' if current_status=='ongoing' else '' }}">
-       Ongoing
-    </a>
-    <a href="/?status=completed"
-       class="{{ 'active' if current_status=='completed' else '' }}">
-       Completed
-    </a>
-  </nav>
+  <a href="/?status=created"
+     class="{{ 'active' if current_status=='created' else '' }}">
+    Outstanding
+    <span class="badge">{{ counts.created }}</span>
+  </a>
+
+  <a href="/?status=ongoing"
+     class="{{ 'active' if current_status=='ongoing' else '' }}">
+    Ongoing
+    <span class="badge">{{ counts.ongoing }}</span>
+  </a>
+
+  <a href="/?status=completed"
+     class="{{ 'active' if current_status=='completed' else '' }}">
+    Completed
+    <span class="badge">{{ counts.completed }}</span>
+  </a>
+</nav>
 
   <div class="top-actions">
     <a href="/new" class="button primary">+ New Task</a>
+    <a href="/by-assignee" class="button">View by Assignee</a>
     <a href="/recurring" class="button">⟳ Recurring</a>
   </div>
 </header>
@@ -33,10 +39,7 @@
 <main>
 
 {% for t in tasks %}
-  <div class="task-card
-       {% if t.due_date and t.status != 'completed' and t.due_date < today %}
-         overdue
-       {% endif %}">
+  <div class="task-card {{ t.status }} {% if t.due_date and t.status != 'completed' and t.due_date < today %}overdue{% endif %}">
 
     <div class="task-header">
       <h3>{{ t.title }}</h3>

@@ -24,16 +24,49 @@ header {
   margin-bottom: 15px;
 }
 
-.tabs a {
-  text-decoration: none;
+.tabs > a {
+  background-color: #f3f4f6;
+  color: #111827;
+  transition: background-color 0.15s ease;
+  display: inline-block;
   padding: 8px 14px;
-  border-radius: 20px;
-  background: #eee;
+  border-radius: 999px;
+  text-decoration: none;
+  position: relative;
+}
+
+.badge {
+  display: inline-block;
+  margin-left: 6px;
+  background: #e0e0e0;
   color: #333;
+  border-radius: 999px;
+  padding: 2px 7px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.tabs a.active .badge {
+  background: #1e40af;
+  color: white;
+}
+.tabs a:not(.active) .badge {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.tabs > a:hover {
+  background-color: #e5e7eb;
+}
+
+.tabs a {
+  background-color: #e5e7eb;
+  color: #111827;
 }
 
 .tabs a.active {
-  background: #1976d2;
+  background-color: #1976d2;
   color: white;
 }
 
@@ -72,7 +105,23 @@ header {
   margin-bottom: 15px;
 }
 
+.task-card.created {
+  background-color: #eef2f7;
+  border-left-color: #1976d2;
+}
+
+.task-card.ongoing {
+  background-color: #fff8e1;
+  border-left-color: #f9a825;
+}
+
+.task-card.completed {
+  background-color: #f1f8e9;
+  border-left-color: #2e7d32;
+}
+
 .task-card.overdue {
+  background-color: #fdecea;
   border-left-color: #c62828;
 }
 
@@ -165,4 +214,31 @@ header {
 .attachments ul {
   padding-left: 18px;
   margin: 5px 0;
+}
+
+/* ---------- ASSIGNEES PAGE ---------- */
+
+.assignee-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.assignee-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #f9fafb;
+  border-radius: 6px;
+}
+
+.tabs.secondary a {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.tabs.secondary a.active {
+  background: #374151;
+  color: white;
 }

@@ -41,6 +41,13 @@ CREATE TABLE IF NOT EXISTS task_files (
 )
 """)
 
+c.execute("""
+CREATE TABLE IF NOT EXISTS assignees (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE
+);
+""")
+
 conn.commit()
 conn.close()
 

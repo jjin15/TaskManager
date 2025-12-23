@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Manage Assignees</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+  <h1>Manage Assignees</h1>
+
+  <div class="top-actions">
+    <a href="/" class="button">← Back to Tasks</a>
+  </div>
+</header>
+
+<main>
+
+  <div class="form-card">
+
+    <!-- Add assignee -->
+    <form method="post" action="/assignees/add" class="form-actions" style="align-items: flex-end;">
+      <label>
+        Add assignee
+        <input type="text" name="name" required>
+      </label>
+
+      <button type="submit" class="button primary">
+        Add
+      </button>
+    </form>
+
+    <hr>
+
+    <!-- Assignee list -->
+    <div class="assignee-list">
+      {% for a in assignees %}
+        <div class="assignee-row">
+          <span class="assignee-name">{{ a[0] }}</span>
+
+          {% if a[0] != 'Unassigned' %}
+            <a href="/assignees/delete/{{ a[0] }}"
+               class="button danger"
+               onclick="return confirm('Delete this assignee? Tasks will be reassigned to Unassigned.')">
+              Delete
+            </a>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+
+</main>
+
+</body>
+</html>

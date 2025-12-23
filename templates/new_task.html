@@ -30,8 +30,16 @@
 
     <label>
       Assignee
-      <input type="text" name="assignee">
+      <select name="assignee">
+        {% for a in assignees %}
+          <option value="{{ a }}">{{ a }}</option>
+        {% endfor %}
+      </select>
     </label>
+
+    <a href="/assignees/manage" class="button">
+      Manage Assignees
+    </a>
 
     <label>
       Due date
