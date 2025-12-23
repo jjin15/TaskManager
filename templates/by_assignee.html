@@ -10,18 +10,21 @@
   <h1>Tasks by Assignee</h1>
 
   <!-- Status pills -->
-  <nav class="tabs">
-    {% for s, label in [
-      ('created','Outstanding'),
-      ('ongoing','Ongoing'),
-      ('completed','Completed')
-    ] %}
-      <a href="/by-assignee?status={{ s }}&assignee={{ current_assignee }}"
-         class="{{ 'active' if current_status == s else '' }}">
-        {{ label }}
-      </a>
-    {% endfor %}
-  </nav>
+  <nav class="tabs secondary">
+  <a href="/by-assignee?status={{ current_status }}&assignee=All"
+     class="{{ 'active' if current_assignee == 'All' else '' }}">
+    All
+    <span class="badge">{{ total_count }}</span>
+  </a>
+
+  {% for a in assignees %}
+    <a href="/by-assignee?status={{ current_status }}&assignee={{ a }}"
+       class="{{ 'active' if current_assignee == a else '' }}">
+      {{ a }}
+      <span class="badge">{{ counts.get(a, 0) }}</span>
+    </a>
+  {% endfor %}
+</nav>
 
   <!-- Assignee pills -->
   <nav class="tabs secondary">

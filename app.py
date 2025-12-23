@@ -202,30 +202,47 @@ def by_assignee():
 
     db = get_db()
 
-    query = """
-        SELECT * FROM tasks
-        WHERE status = ?
-    """
-    params = [status]
-
-    if assignee != "All":
-        query += " AND assignee = ?"
-        params.append(assignee)
-
-    tasks = db.execute(query, params).fetchall()
-
+    # list of assignees
     assignees = [
-        r[0] for r in db.execute(
+        r["name"] for r in db.execute(
             "SELECT name FROM assignees ORDER BY name"
         ).fetchall()
     ]
 
-    db.close()
+    # badge counts per assignee (status-aware)
+    counts = {
+        r["assignee"]: r["count"]
+        for r in db.execute("""
+            SELECT assignee, COUNT(*) AS count
+            FROM tasks
+            WHERE status = ?
+            GROUP BY assignee
+        """, (status,)).fetchall()
+    }
+
+    # total count for "All"
+    total_count = sum(counts.values())
+
+    # task list
+    if assignee == "All":
+        tasks = db.execute("""
+            SELECT * FROM tasks
+            WHERE status = ?
+            ORDER BY due_date IS NULL, due_date
+        """, (status,)).fetchall()
+    else:
+        tasks = db.execute("""
+            SELECT * FROM tasks
+            WHERE status = ? AND assignee = ?
+            ORDER BY due_date IS NULL, due_date
+        """, (status, assignee)).fetchall()
 
     return render_template(
         "by_assignee.html",
         tasks=tasks,
         assignees=assignees,
+        counts=counts,
+        total_count=total_count,
         current_status=status,
         current_assignee=assignee
     )
