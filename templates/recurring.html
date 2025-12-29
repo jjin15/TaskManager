@@ -13,7 +13,7 @@
 
 <main>
 
-  <form method="post" class="form-card">
+ <form method="post" class="form-card">
 
     <label>
       Title
@@ -26,54 +26,64 @@
     </label>
 
     <label>
-      Prerequisites
-      <textarea name="prerequisites"></textarea>
-    </label>
-
-    <label>
       Assignee
-      <input type="text" name="assignee">
+      <select name="assignee">
+        {% for a in assignees %}
+          <option value="{{ a[0] }}">{{ a[0] }}</option>
+        {% endfor %}
+      </select>
     </label>
 
     <label>
-      Due day of month
-      <input type="number"
-             name="due_day"
-             min="1"
-             max="31"
-             required>
+      Frequency
+      <select name="frequency" id="frequency" onchange="updateRecurringFields()">
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+        <option value="annual">Annual</option>
+      </select>
     </label>
 
-    <label>
-        Frequency
-        <select name="frequency" id="frequency"
-                onchange="toggleRecurringFields()">
-          <option value="weekly">Weekly</option>
-          <option value="monthly" selected>Monthly</option>
-          <option value="annual">Annual</option>
+    <!-- Weekly -->
+    <label id="weekly-field">
+      Day of week
+      <select name="weekday">
+        <option value="0">Monday</option>
+        <option value="1">Tuesday</option>
+        <option value="2">Wednesday</option>
+        <option value="3">Thursday</option>
+        <option value="4">Friday</option>
+        <option value="5">Saturday</option>
+        <option value="6">Sunday</option>
+      </select>
+    </label>
+
+    <!-- Monthly -->
+    <label id="monthly-field" style="display:none;">
+      Day of month
+      <input type="number" name="day_of_month" min="1" max="31">
+    </label>
+
+    <!-- Annual -->
+    <div id="annual-field" style="display:none;">
+      <label>
+        Month
+        <select name="month">
+          {% for m in range(1,13) %}
+            <option value="{{ m }}">{{ m }}</option>
+          {% endfor %}
         </select>
       </label>
 
-      <label id="weekly-field" style="display:none;">
-        Repeat every (weeks)
-        <input type="number" name="weekly_interval" min="1" value="1">
+      <label>
+        Day
+        <input type="number" name="day" min="1" max="31">
       </label>
-
-      <label id="monthly-field">
-        Due day of month
-        <input type="number"
-               name="due_day"
-               min="1"
-               max="31">
-      </label>
-
-      <label id="annual-field" style="display:none;">
-        Due date (month & day)
-        <input type="date" name="annual_date">
-      </label>
+    </div>
 
     <div class="form-actions">
-      <button class="button primary">Create recurring task</button>
+      <button type="submit" class="button primary">
+        Create Recurring Task
+      </button>
       <a href="/" class="button">Cancel</a>
     </div>
 
@@ -83,3 +93,20 @@
 
 </body>
 </html>
+
+<script>
+function updateRecurringFields() {
+  const freq = document.getElementById("frequency").value;
+
+  document.getElementById("weekly-field").style.display =
+    freq === "weekly" ? "block" : "none";
+
+  document.getElementById("monthly-field").style.display =
+    freq === "monthly" ? "block" : "none";
+
+  document.getElementById("annual-field").style.display =
+    freq === "annual" ? "block" : "none";
+}
+
+updateRecurringFields();
+</script>

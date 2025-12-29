@@ -24,13 +24,16 @@ CREATE TABLE IF NOT EXISTS recurring_tasks (
     description TEXT,
     prerequisites TEXT,
     assignee TEXT,
-    frequency TEXT NOT NULL,
-    interval INTEGER DEFAULT 1,
-    start_date TEXT NOT NULL,
+
+    frequency TEXT NOT NULL,      -- weekly | monthly | annual
+    weekday INTEGER,              -- 0 = Monday ... 6 = Sunday
+    day_of_month INTEGER,         -- 1–31
+    month INTEGER,                -- 1–12 (annual)
+    day INTEGER,                  -- 1–31 (annual)
+
     last_generated TEXT
 )
 """)
-
 c.execute("""
 CREATE TABLE IF NOT EXISTS task_files (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

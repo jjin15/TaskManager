@@ -373,25 +373,57 @@ def recurring():
     db = get_db()
 
     if request.method == "POST":
+        frequency = request.form["frequency"]
+
+        # Default all optional fields
+        weekday = None
+        day_of_month = None
+        month = None
+        day = None
+
+        if frequency == "weekly":
+            weekday = int(request.form["weekday"])
+
+        elif frequency == "monthly":
+            day_of_month = int(request.form["day_of_month"])
+
+        elif frequency == "annual":
+            month = int(request.form["month"])
+            day = int(request.form["day"])
+
         db.execute("""
             INSERT INTO recurring_tasks
-            (title, description, prerequisites, assignee,
-             frequency, interval, start_date)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            (title, description, assignee,
+             frequency, weekday, day_of_month, month, day)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             request.form["title"],
             request.form["description"],
-            request.form["prerequisites"],
             request.form["assignee"],
-            request.form["frequency"],
-            int(request.form["interval"]),
-            request.form["start_date"]
+            frequency,
+            weekday,
+            day_of_month,
+            month,
+            day
         ))
+
         db.commit()
 
-    rows = db.execute("SELECT * FROM recurring_tasks").fetchall()
+    recurring_tasks = db.execute(
+        "SELECT * FROM recurring_tasks ORDER BY id DESC"
+    ).fetchall()
+
+    assignees = db.execute(
+        "SELECT name FROM assignees ORDER BY name"
+    ).fetchall()
+
     db.close()
-    return render_template("recurring.html", recurring=rows)
+
+    return render_template(
+        "recurring.html",
+        recurring=recurring_tasks,
+        assignees=assignees
+    )
 
 @app.route("/edit/<int:task_id>", methods=["GET", "POST"])
 def edit_task(task_id):
